@@ -38,6 +38,8 @@ public class PieceMovement : MonoBehaviour
 
     ArrayList arraypositionclicked = new ArrayList();
     public GameObject nothing;
+
+
     void Start()
     {
 
@@ -126,9 +128,9 @@ public class PieceMovement : MonoBehaviour
             RaycastHit hit;
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-            if (Physics.Raycast(ray, out hit,100.0f) && hit.transform.gameObject!=null)
+            if (Physics.Raycast(ray, out hit,100.0f) && hit.transform.gameObject!=null && hit.transform.gameObject.name != "position_possible(Clone)")
             {
-                //print(hit.transform.gameObject.name);
+                print(hit.transform.gameObject.name);
                 for (int x = 0; x < nb_cases; x++)
                 {
                     for (int y = 0; y < nb_cases; y++)
@@ -991,7 +993,7 @@ public class PieceMovement : MonoBehaviour
 
             if (Physics.Raycast(ray, out hit, 100.0f) && hit.transform.gameObject.name == "position_possible(Clone)")
             {
-                //print(hit.transform.gameObject.name);
+                Debug.Log("christ "+hit.transform.gameObject.name);
                 for (int x = 0; x < nb_cases; x++)
                 {
                     for (int y = 0; y < nb_cases; y++)
@@ -1015,6 +1017,20 @@ public class PieceMovement : MonoBehaviour
         }
     }
 
+    public bool ClickedOnClonePosition()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            RaycastHit hit;
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+            if (Physics.Raycast(ray, out hit, 100.0f) && hit.transform.gameObject.name == "position_possible(Clone)")
+            {
+                return true;
+            }
+        }
+        return false;
+    }
 
     public void Print(GameObject[,] list)
     {
@@ -1044,27 +1060,33 @@ public class PieceMovement : MonoBehaviour
     } //cylindre 
 
 
-   
+    
 
 
 
     void Update()
     {
-        //Print(Grille);
-        if (OnPieceClicked()!=null)
+        
+
+        if (Input.GetMouseButtonDown(0))
         {
-            Destroycloneposition();
-            arraypositionclicked = OnPieceClicked();
-            WhoIsClickedBlack((int)arraypositionclicked[0], (int)arraypositionclicked[1]);
-            WhoIsClickedWhite((int)arraypositionclicked[0], (int)arraypositionclicked[1]);
+
+            if (ClickedOnClonePosition())
+            {
+                MovePiece((int)arraypositionclicked[0], (int)arraypositionclicked[1]);
+
+            }
+
+            if (OnPieceClicked() != null)
+            {
+                Destroycloneposition();
+                arraypositionclicked = OnPieceClicked();
+                WhoIsClickedBlack((int)arraypositionclicked[0], (int)arraypositionclicked[1]);
+                WhoIsClickedWhite((int)arraypositionclicked[0], (int)arraypositionclicked[1]);
+            }
+
+
         }
-        if (Input.GetMouseButtonDown(0) && arraypositionclicked.Count==2)
-            MovePiece((int)arraypositionclicked[0], (int)arraypositionclicked[1]);
-
-
-
-
-
 
     }
 }
